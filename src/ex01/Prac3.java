@@ -1,4 +1,4 @@
-package ex;
+package ex01;
 
 public class Prac3 {
     public static void main(String[] args) {
