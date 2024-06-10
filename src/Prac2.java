@@ -1,4 +1,4 @@
-public class Prac3 {
+public class Prac2 {
     public static void main(String[] args) {
         int n = 15;
         int m = 12;
