@@ -1,66 +1,65 @@
 package graph;
 
-import java.util.Arrays;
-
 public class Prac6 {
+
+    public static final int INF = (int) 1e9;
     public static void main(String[] args) {
-        int n = 7;
-        int m = 9;
-        int[][] edges = {
-            {1, 2, 29},
-            {1, 5, 75},
-            {2, 3, 35},
-            {2, 6, 34},
-            {3, 4, 7},
-            {4, 6, 23},
-            {4, 7, 13},
-            {5, 6, 53},
-            {6, 7, 25}
+        int n = 5;
+        int m = 6;
+        int[][] graph = {
+            {INF, 0, 1, INF, 1, INF},
+            {0, INF, 1, 1, 1, 1},
+            {1, 1, INF, 0, 0, 1},
+            {INF, 1, 0, INF, 1, 1},
+            {1, 1, 0, 1, INF, 1}
         };
 
-        System.out.println(kruskal(n, m, edges));
+        System.out.println(prim(0, n, m, graph));
     }
 
-    public static int kruskal(int n, int m, int[][] edges) {
-        int result = 0;
-        int[] parent = new int[n + 1];
+    public static int prim(int start, int n, int m, int[][] graph) {
+        int[] distance = new int[n];
+        boolean[] visited = new boolean[n];
 
-        for (int i = 1; i < n + 1; i++) {
-            parent[i] = i;
+        for (int i = 0; i < n; i++) {
+            distance[i] = INF;
         }
 
-        Arrays.sort(edges, (a, b) -> a[2] - b[2]);
+        distance[start] = 0;
+        visited[start] = true;
 
-        for (int[] edge : edges) {
-            int a = edge[0];
-            int b = edge[1];
-            int cost = edge[2];
+        for (int i = 0; i < n - 1; i++) {
+            int now = getSmallestNode(n, distance, visited);
+            visited[now] = true;
 
-            if (findParent(parent, a) != findParent(parent, b)) {
-                unionParent(parent, a, b);
-                result += cost;
+            for (int j = 0; j < n; j++) {
+                if (!visited[j] && graph[now][j] != INF) {
+                    distance[j] = Math.min(distance[j], graph[now][j]);
+                }
+            }
+        }
+
+        int result = 0;
+        for (int i = 0; i < n; i++) {
+            if (distance[i] != INF) {
+                result += distance[i];
             }
         }
 
         return result;
     }
 
-    public static int findParent(int[] parent, int x) {
-        if (parent[x] != x) {
-            parent[x] = findParent(parent, parent[x]);
+    public static int getSmallestNode(int n, int[] distance, boolean[] visited) {
+        int min = INF;
+        int index = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (distance[i] < min && !visited[i]) {
+                min = distance[i];
+                index = i;
+            }
         }
 
-        return parent[x];
-    }
-
-    public static void unionParent(int[] parent, int a, int b) {
-        a = findParent(parent, a);
-        b = findParent(parent, b);
-
-        if (a < b) {
-            parent[b] = a;
-        } else {
-            parent[a] = b;
-        }
+        return index;
     }
 }
