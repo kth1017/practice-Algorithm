@@ -1,9 +1,10 @@
 package graph;
 
-import java.util.PriorityQueue;
-
 public class Prac4 {
-    // Shortest Path Algorithm(dijkstra)
+    public static final int INF = (int) 1e9;
+    public static final int[] dx = {-1, 1, 0, 0};
+    public static final int[] dy = {0, 0, -1, 1};
+
     public static void main(String[] args) {
         int n = 5;
         int m = 6;
@@ -15,15 +16,10 @@ public class Prac4 {
             {1, 1, 1, 1, 1, 1}
         };
 
-        System.out.println(dijkstra(0, 0, n, m, graph));
+        System.out.println(bellmanFord(0, 0, n, m, graph));
     }
 
-    public static final int INF = (int) 1e9;
-
-    public static int dijkstra(int x, int y, int n, int m, int[][] graph) {
-        int[] dx = {-1, 1, 0, 0};
-        int[] dy = {0, 0, -1, 1};
-
+    public static int bellmanFord(int x, int y, int n, int m, int[][] graph) {
         int[][] distance = new int[n][m];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
@@ -31,33 +27,27 @@ public class Prac4 {
             }
         }
 
-        PriorityQueue<Node> pq = new PriorityQueue<>();
-        pq.offer(new Node(x, y, 0));
         distance[x][y] = 0;
 
-        while (!pq.isEmpty()) {
-            Node node = pq.poll();
-            x = node.getX();
-            y = node.getY();
-            int dist = node.getDistance();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n; j++) {
+                for (int k = 0; k < m; k++) {
+                    if (distance[j][k] == INF) {
+                        continue;
+                    }
 
-            if (distance[x][y] < dist) {
-                continue;
-            }
+                    for (int l = 0; l < 4; l++) {
+                        int nx = j + dx[l];
+                        int ny = k + dy[l];
 
-            for (int i = 0; i < 4; i++) {
-                int nx = x + dx[i];
-                int ny = y + dy[i];
+                        if (nx < 0 || nx >= n || ny < 0 || ny >= m) {
+                            continue;
+                        }
 
-                if (nx < 0 || nx >= n || ny < 0 || ny >= m) {
-                    continue;
-                }
-
-                int cost = dist + graph[nx][ny];
-
-                if (cost < distance[nx][ny]) {
-                    distance[nx][ny] = cost;
-                    pq.offer(new Node(nx, ny, cost));
+                        if (distance[nx][ny] > distance[j][k] + graph[nx][ny]) {
+                            distance[nx][ny] = distance[j][k] + graph[nx][ny];
+                        }
+                    }
                 }
             }
         }
@@ -65,7 +55,7 @@ public class Prac4 {
         return distance[n - 1][m - 1];
     }
 
-    static class Node implements Comparable<Node> {
+    static class Node {
         private final int x;
         private final int y;
         private final int distance;
@@ -87,10 +77,8 @@ public class Prac4 {
         public int getDistance() {
             return distance;
         }
-
-        @Override
-        public int compareTo(Node other) {
-            return Integer.compare(this.distance, other.distance);
-        }
     }
+
+
+
 }

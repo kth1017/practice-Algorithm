@@ -1,65 +1,51 @@
 package graph;
 
 public class Prac6 {
-
-    public static final int INF = (int) 1e9;
+    // Topological Sorting practice
     public static void main(String[] args) {
-        int n = 5;
-        int m = 6;
+        int n = 7;
         int[][] graph = {
-            {INF, 0, 1, INF, 1, INF},
-            {0, INF, 1, 1, 1, 1},
-            {1, 1, INF, 0, 0, 1},
-            {INF, 1, 0, INF, 1, 1},
-            {1, 1, 0, 1, INF, 1}
+            {0, 1},
+            {0, 2},
+            {1, 3},
+            {1, 4},
+            {2, 5},
+            {3, 6},
+            {4, 6},
+            {5, 6}
         };
 
-        System.out.println(prim(0, n, m, graph));
+        topologicalSort(n, graph);
     }
 
-    public static int prim(int start, int n, int m, int[][] graph) {
-        int[] distance = new int[n];
-        boolean[] visited = new boolean[n];
-
+    public static void topologicalSort(int n, int[][] graph) {
+        int[] indegree = new int[n];
         for (int i = 0; i < n; i++) {
-            distance[i] = INF;
-        }
-
-        distance[start] = 0;
-        visited[start] = true;
-
-        for (int i = 0; i < n - 1; i++) {
-            int now = getSmallestNode(n, distance, visited);
-            visited[now] = true;
-
-            for (int j = 0; j < n; j++) {
-                if (!visited[j] && graph[now][j] != INF) {
-                    distance[j] = Math.min(distance[j], graph[now][j]);
+            for (int j = 0; j < graph.length; j++) {
+                if (graph[j][1] == i) {
+                    indegree[i]++;
                 }
             }
         }
 
-        int result = 0;
         for (int i = 0; i < n; i++) {
-            if (distance[i] != INF) {
-                result += distance[i];
+            int x = getZeroIndegree(n, indegree);
+            indegree[x] = -1;
+            System.out.print(x + " ");
+            for (int j = 0; j < graph.length; j++) {
+                if (graph[j][0] == x) {
+                    indegree[graph[j][1]]--;
+                }
             }
         }
-
-        return result;
     }
 
-    public static int getSmallestNode(int n, int[] distance, boolean[] visited) {
-        int min = INF;
-        int index = 0;
-
+    public static int getZeroIndegree(int n, int[] indegree) {
         for (int i = 0; i < n; i++) {
-            if (distance[i] < min && !visited[i]) {
-                min = distance[i];
-                index = i;
+            if (indegree[i] == 0) {
+                return i;
             }
         }
-
-        return index;
+        return -1;
     }
 }
