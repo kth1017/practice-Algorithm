@@ -1,67 +1,65 @@
 package graph;
 
-import java.util.Stack;
-
 public class Prac3 {
-    // DFS(스택)
+
+    public static final int INF = (int) 1e9;
     public static void main(String[] args) {
         int n = 5;
         int m = 6;
         int[][] graph = {
-            {1, 0, 1, 0, 1, 0},
-            {1, 1, 1, 1, 1, 1},
-            {0, 0, 0, 0, 0, 1},
-            {1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1}
+            {INF, 0, 1, INF, 1, INF},
+            {0, INF, 1, 1, 1, 1},
+            {1, 1, INF, 0, 0, 1},
+            {INF, 1, 0, INF, 1, 1},
+            {1, 1, 0, 1, INF, 1}
         };
 
-        System.out.println(dfs2(0, 0, n, m, graph));
+        System.out.println(prim(0, n, m, graph));
     }
 
+    public static int prim(int start, int n, int m, int[][] graph) {
+        int[] distance = new int[n];
+        boolean[] visited = new boolean[n];
 
-    public static int dfs2(int x, int y, int n, int m, int[][] graph) {
-        Stack<Node> stack = new Stack<>();
-        stack.push(new Node(x, y));
+        for (int i = 0; i < n; i++) {
+            distance[i] = INF;
+        }
 
-        while (!stack.isEmpty()) {
-            Node node = stack.pop();
-            x = node.getX();
-            y = node.getY();
+        distance[start] = 0;
+        visited[start] = true;
 
-            if (x <= -1 || x >= n || y <= -1 || y >= m) {
-                continue;
-            }
+        for (int i = 0; i < n - 1; i++) {
+            int now = getSmallestNode(n, distance, visited);
+            visited[now] = true;
 
-            if (graph[x][y] == 0) {
-                graph[x][y] = 1;
-
-                stack.push(new Node(x - 1, y));
-                stack.push(new Node(x + 1, y));
-                stack.push(new Node(x, y - 1));
-                stack.push(new Node(x, y + 1));
+            for (int j = 0; j < n; j++) {
+                if (!visited[j] && graph[now][j] != INF) {
+                    distance[j] = Math.min(distance[j], graph[now][j]);
+                }
             }
         }
 
-        return 1;
+        int result = 0;
+        for (int i = 0; i < n; i++) {
+            if (distance[i] != INF) {
+                result += distance[i];
+            }
+        }
+
+        return result;
     }
 
-    static class Node {
-        private final int x;
-        private final int y;
+    public static int getSmallestNode(int n, int[] distance, boolean[] visited) {
+        int min = INF;
+        int index = 0;
 
-        public Node(int x, int y) {
-            this.x = x;
-            this.y = y;
+        for (int i = 0; i < n; i++) {
+            if (distance[i] < min && !visited[i]) {
+                min = distance[i];
+                index = i;
+            }
         }
 
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
+        return index;
     }
-
-
 }
