@@ -1,51 +1,50 @@
 package graph;
 
 public class Prac3 {
-    // Topological Sorting practice
+    // Lowest Common Ancestor practice
     public static void main(String[] args) {
-        int n = 7;
-        int[][] graph = {
-            {0, 1},
-            {0, 2},
-            {1, 3},
-            {1, 4},
-            {2, 5},
-            {3, 6},
-            {4, 6},
-            {5, 6}
+        int n = 15;
+        int m = 12;
+        int[] parent = {
+            0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5
         };
 
-        topologicalSort(n, graph);
+        System.out.println(lca(3, 4, parent));
+        System.out.println(lca(6, 11, parent));
+        System.out.println(lca(13, 9, parent));
+        System.out.println(lca(7, 10, parent));
     }
 
-    public static void topologicalSort(int n, int[][] graph) {
-        int[] indegree = new int[n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < graph.length; j++) {
-                if (graph[j][1] == i) {
-                    indegree[i]++;
+    public static int lca(int a, int b, int[] parent) {
+        int[] pathA = new int[100];
+        int[] pathB = new int[100];
+        int indexA = 0;
+        int indexB = 0;
+
+        while (true) {
+            pathA[indexA++] = a;
+            if (a == 0) {
+                break;
+            }
+            a = parent[a];
+        }
+
+        while (true) {
+            pathB[indexB++] = b;
+            if (b == 0) {
+                break;
+            }
+            b = parent[b];
+        }
+
+        for (int i = 0; i < indexA; i++) {
+            for (int j = 0; j < indexB; j++) {
+                if (pathA[i] == pathB[j]) {
+                    return pathA[i];
                 }
             }
         }
 
-        for (int i = 0; i < n; i++) {
-            int x = getZeroIndegree(n, indegree);
-            indegree[x] = -1;
-            System.out.print(x + " ");
-            for (int j = 0; j < graph.length; j++) {
-                if (graph[j][0] == x) {
-                    indegree[graph[j][1]]--;
-                }
-            }
-        }
-    }
-
-    public static int getZeroIndegree(int n, int[] indegree) {
-        for (int i = 0; i < n; i++) {
-            if (indegree[i] == 0) {
-                return i;
-            }
-        }
         return -1;
     }
 }
