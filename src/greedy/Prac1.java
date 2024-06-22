@@ -2,15 +2,24 @@ package greedy;
 
 public class Prac1 {
     public static void main(String[] args) {
-        int n = 1260;
-        int count = 0;
-        int[] coinTypes = {500, 100, 50, 10};
+        int n = 25;
+        int k = 3;
+        int result = 0;
 
-        for (int coin : coinTypes) {
-            count += n / coin;
-            n %= coin;
+        while (true) {
+            int target = (n / k) * k;
+            result += (n - target);
+            n = target;
+
+            if (n < k) {
+                break;
+            }
+
+            result++;
+            n /= k;
         }
 
-        System.out.println(count);
+        result += (n - 1);
+        System.out.println(result);
     }
 }
