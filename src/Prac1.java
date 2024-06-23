@@ -1,63 +1,47 @@
 public class Prac1 {
     public static void main(String[] args) {
-        int n = 5;
-        int m = 6;
-        int[][] graph = {
-            {INF, 0, 1, INF, 1, INF},
-            {0, INF, 1, 1, 1, 1},
-            {1, 1, INF, 0, 0, 1},
-            {INF, 1, 0, INF, 1, 1},
-            {1, 1, 0, 1, INF, 1}
+        int n = 15;
+        int m = 12;
+        int[] parent = {
+            0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5
         };
 
-        System.out.println(prim(0, n, m, graph));
+        System.out.println(lca(3, 4, parent));
+        System.out.println(lca(6, 11, parent));
+        System.out.println(lca(13, 9, parent));
+        System.out.println(lca(7, 10, parent));
     }
 
-    public static final int INF = (int) 1e9;
+    public static int lca(int a, int b, int[] parent) {
+        int[] pathA = new int[100];
+        int[] pathB = new int[100];
+        int indexA = 0;
+        int indexB = 0;
 
-    public static int prim(int start, int n, int m, int[][] graph) {
-        int[] distance = new int[n];
-        boolean[] visited = new boolean[n];
-
-        for (int i = 0; i < n; i++) {
-            distance[i] = INF;
+        while (true) {
+            pathA[indexA++] = a;
+            if (a == 0) {
+                break;
+            }
+            a = parent[a];
         }
 
-        distance[start] = 0;
-        visited[start] = true;
+        while (true) {
+            pathB[indexB++] = b;
+            if (b == 0) {
+                break;
+            }
+            b = parent[b];
+        }
 
-        for (int i = 0; i < n - 1; i++) {
-            int now = getSmallestNode(n, distance, visited);
-            visited[now] = true;
-
-            for (int j = 0; j < n; j++) {
-                if (!visited[j] && graph[now][j] != INF) {
-                    distance[j] = Math.min(distance[j], graph[now][j]);
+        for (int i = 0; i < indexA; i++) {
+            for (int j = 0; j < indexB; j++) {
+                if (pathA[i] == pathB[j]) {
+                    return pathA[i];
                 }
             }
         }
 
-        int result = 0;
-        for (int i = 0; i < n; i++) {
-            if (distance[i] != INF) {
-                result += distance[i];
-            }
-        }
-
-        return result;
-    }
-
-    public static int getSmallestNode(int n, int[] distance, boolean[] visited) {
-        int min = INF;
-        int index = 0;
-
-        for (int i = 0; i < n; i++) {
-            if (distance[i] < min && !visited[i]) {
-                min = distance[i];
-                index = i;
-            }
-        }
-
-        return index;
+        return -1;
     }
 }
