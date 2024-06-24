@@ -1,6 +1,6 @@
 package primeNumber;
 
-public class Prac1 {
+public class Prac2 {
     // 대칭으로 인한 n^1/2 개선
     public static void main(String[] args) {
         System.out.println(isPrimeNumber(4));

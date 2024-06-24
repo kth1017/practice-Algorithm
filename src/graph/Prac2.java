@@ -1,6 +1,6 @@
 package graph;
 
-public class Prac1 {
+public class Prac2 {
     // Lowest Common Ancestor practice
     public static void main(String[] args) {
         int n = 15;

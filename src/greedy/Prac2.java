@@ -1,6 +1,6 @@
 package greedy;
 
-public class Prac1 {
+public class Prac2 {
     public static void main(String[] args) {
         int n = 25;
         int k = 3;
